@@ -1,0 +1,1 @@
+https://hackernoon.com/how-to-read-text-file-in-python

@@ -1,0 +1,9 @@
+The `axs[0].bar_label(axs[0].containers[0])` code is used to add labels to the bars in the countplot created by `sns.countplot`. Let's break down what each part of the code does:
+
+- `axs[0]`: This refers to the first subplot (the one at index 0) created using `plt.subplots`. In your case, it's the countplot subplot.
+
+- `axs[0].containers[0]`: The `containers` attribute of the Axes object contains the individual bar containers. In a countplot, there is only one container since it's a single bar per category.
+
+- `axs[0].bar_label(...)`: This method is used to add labels to the bars in the specified container.
+
+Putting it all together, `axs[0].bar_label(axs[0].containers[0])` is adding labels to the bars in the countplot. These labels typically represent the height (count) of each bar, making it easier to read and interpret the count distribution in the countplot.

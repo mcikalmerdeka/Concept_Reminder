@@ -1,0 +1,1 @@
+sns.catplot(data=df, y='Income', x='Married/Single', hue='Risk_Flag', col='House_Ownership', row='Car_Ownership')
