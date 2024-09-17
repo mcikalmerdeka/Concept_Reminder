@@ -1,0 +1,224 @@
+
+C:\Users\Cikal Merdeka>
+
+how can i change the directory to this in command line (cmd)?
+
+E:\Udemy\dbt\The Complete dbt (Data Build Tool) Bootcamp Zero to Hero\complete-dbt-bootcamp-zero-to-hero
+
+---------------------------------------------------------------------------------
+
+To change the directory in the Windows command line (cmd) to the path you specified, you can use the `cd` (change directory) command. Here's how you can do it:
+
+```
+cd /d E:\Udemy\dbt\The Complete dbt (Data Build Tool) Bootcamp Zero to Hero\complete-dbt-bootcamp-zero-to-hero
+```
+
+The `/d` switch is used when you need to change both the drive and directory at the same time. Without it, you'd first need to change to the E: drive, then change the directory.
+
+If you're already on the E: drive, you can omit the `/d` switch:
+
+```
+cd E:\Udemy\dbt\The Complete dbt (Data Build Tool) Bootcamp Zero to Hero\complete-dbt-bootcamp-zero-to-hero
+```
+
+After executing this command, your current working directory will be changed to the specified path.
+
+If you encounter any issues with spaces in the folder names, you can enclose the entire path in quotation marks:
+
+```
+cd /d "E:\Udemy\dbt\The Complete dbt (Data Build Tool) Bootcamp Zero to Hero\complete-dbt-bootcamp-zero-to-hero"
+```
+
+This should work even if there are spaces in the folder names.
+
+-----------------------------------------------------------------------------
+
+To return to the original directory (C:\Users\Cikal Merdeka), you have a couple of options:
+
+1. Use the `cd` command with the full path:
+
+   ```
+   cd C:\Users\Cikal Merdeka
+   ```
+
+2. If you want to return to your user's home directory quickly, you can use:
+
+   ```
+   cd %USERPROFILE%
+   ```
+
+   This environment variable always points to the current user's home directory.
+
+3. If you just want to return to the C: drive root, you can use:
+
+   ```
+   cd /d C:\
+   ```
+
+4. If you've only changed directories within the same drive, you can use `cd ..` repeatedly to go up one level at a time until you reach the desired directory.
+
+5. If you want to return to the root of the current drive, you can simply type:
+
+   ```
+   cd \
+   ```
+
+Remember, if you've changed drives (from C: to E: in your case), you'll need to change back to the C: drive first. You can do this by simply typing:
+
+```
+C:
+```
+
+And then use one of the above methods to navigate to the specific directory.
+
+If you find yourself frequently needing to switch between these directories, you might want to consider creating batch files or aliases to make the process quicker and easier.
+
+------------------------------------------------------------------------------------------------
+** Active and Deactive Virtual Environment
+
+For Windows using cmd, you can create a virtual environment using Python's built-in `venv` module. Here's how to do it:
+
+1. First, make sure you're in the correct directory:
+   ```
+   E:\Udemy\dbt\The Complete dbt (Data Build Tool) Bootcamp Zero to Hero\course>
+   ```
+
+2. Then, create the virtual environment by running:
+   ```
+   python -m venv venv
+   ```
+   This command tells Python to run the `venv` module and create a virtual environment named "venv".
+
+3. To activate the virtual environment, use:
+   ```
+   venv\Scripts\activate
+   ```
+
+After activation, you should see "(venv)" at the beginning of your command prompt, like this:
+```
+(venv) E:\Udemy\dbt\The Complete dbt (Data Build Tool) Bootcamp Zero to Hero\course>
+```
+
+This indicates that the virtual environment is active. You can now install packages (like dbt) within this isolated environment.
+
+When you're done working in the virtual environment, you can deactivate it by simply typing:
+```
+deactivate
+```
+
+Remember, if you encounter any issues with the `python` command not being recognized, you might need to:
+1. Ensure Python is installed on your system.
+2. Add Python to your system's PATH environment variable.
+3. Use the full path to your Python executable, e.g.:
+   ```
+   C:\Path\To\Python\python.exe -m venv venv
+   ```
+
+Replace `C:\Path\To\Python\` with the actual path where Python is installed on your system.
+
+----------------------------------------------------------------------------------------
+** Changing version of python
+
+Certainly! To delete the existing virtual environment and create a new one with Python 3.11.6 while keeping the same name "venv", follow these steps:
+
+1. First, make sure you're not currently in the virtual environment. If you are, deactivate it:
+
+   ```
+   deactivate
+   ```
+
+2. Delete the existing virtual environment. In your command prompt, navigate to the parent directory of your "venv" folder and run:
+
+   ```
+   rmdir /s /q venv
+   ```
+
+   This command removes the "venv" directory and all its contents. The `/s` flag deletes all subdirectories and files, and `/q` runs the command in quiet mode.
+
+3. Now, create a new virtual environment using Python 3.11.6:
+
+   ```
+   py -3.11 -m venv venv
+   ```
+
+   This assumes you have Python 3.11 installed and accessible via the `py` launcher. If you get an error, you might need to use the full path to the Python 3.11 executable.
+
+4. Activate the new virtual environment:
+
+   ```
+   venv\Scripts\activate
+   ```
+
+5. Verify the Python version:
+
+   ```
+   python --version
+   ```
+
+   This should now show Python 3.11.6 (or whichever 3.11.x version you have installed).
+
+6. You can now install dbt and other necessary packages in this new environment.
+
+If you had a requirements.txt file or a list of packages you were using in the old environment, you'll need to reinstall them in this new environment. You can do this manually or by using a requirements file:
+
+```
+pip install -r requirements.txt
+```
+
+By following these steps, you've effectively replaced your Python 3.12.2 virtual environment with a new Python 3.11.6 environment, keeping the name "venv". This should provide better compatibility with dbt and other packages that might not yet fully support Python 3.12.
+
+---------------------------------------------------------------------------------
+* Resolving error related to version not in pc yet
+
+The error you're seeing occurs because the `py` launcher is unable to find the specific version of Python (3.11.6) on your machine. Here’s how to resolve it:
+
+### Steps to fix:
+
+1. **Verify if Python 3.11.6 is Installed:**
+   - Open a terminal or command prompt and type:
+     ```bash
+     py -0p
+     ```
+     This will list all Python installations on your system. If Python 3.11.6 is not listed, it means it's not installed.
+
+2. **Install Python 3.11.6:**
+   - Download and install Python 3.11.6 from the official website:
+     - [Download Python 3.11.6](https://www.python.org/downloads/release/python-3116/)
+   - During installation, make sure to:
+     - Check the option **"Add Python to PATH"**.
+     - Select "Customize installation" and make sure the **"py" launcher** option is checked.
+
+3. **Create the Virtual Environment with Python 3.11.6:**
+   After installing Python 3.11.6, you can specify this version to create your virtual environment:
+   ```bash
+   py -3.11 -m venv venv
+   ```
+
+4. **Set up the Environment Variable (Optional):**
+   If you'd prefer using `winget` or another method suggested in the error, you can set the `PYLAUNCHER_ALLOW_INSTALL` environment variable:
+   - On Windows:
+     - Open **Control Panel > System > Advanced system settings > Environment Variables**.
+     - Add a new system variable:
+       - **Variable name**: `PYLAUNCHER_ALLOW_INSTALL`
+       - **Variable value**: `1`
+   - Restart your terminal and try the command again.
+
+This should resolve the issue! Let me know how it goes.
+
+----------------------------------------------------------------------------------------
+if i install python from the official website and check the option "Add Python to PATH", will it change the version of currently installed python in my computer which is 3.12.2 ?
+
+
+No, installing Python 3.11.6 from the official website and checking the "Add Python to PATH" option will not replace or uninstall the existing Python 3.12.2 installation on your computer. Here’s what will happen:
+
+- **Both versions (3.11.6 and 3.12.2) will coexist** on your system.
+- The **`py` launcher** will manage multiple Python versions. When you use the `py` command, you can specify which version to use. For example:
+  - `py -3.12` will launch Python 3.12.2.
+  - `py -3.11` will launch Python 3.11.6.
+
+However, if you:
+- **Add Python 3.11.6 to the PATH**: By default, this will make `python` point to the newly installed Python 3.11.6 in your terminal or command prompt. If you want to keep Python 3.12.2 as the default, you can either:
+  - Avoid adding 3.11.6 to PATH during installation.
+  - Specify the exact version in your commands (`py -3.11` for 3.11.6 and `py -3.12` for 3.12.2).
+
+In summary, adding 3.11.6 to the PATH will prioritize it when you type `python`, but the `py` launcher will allow you to switch between versions easily.
