@@ -1,0 +1,29 @@
+You're correct that `pip install -r requirements.txt` is commonly used to install packages or libraries in a virtual environment. To create a `requirements.txt` file that lists the libraries used in your project, you have a couple of options:
+
+1. For libraries used in your specific project:
+
+   You can use `pip freeze` to generate a list of installed packages and their versions in your current environment. To save this list to a file named `requirements.txt`, you can use:
+
+   ```
+   pip freeze > requirements.txt
+   ```
+
+   This command will create a `requirements.txt` file in your current directory, listing all installed packages and their versions.
+
+2. For only the libraries directly used in your project:
+
+   If you want to include only the libraries that are directly imported in your project, you can use a tool like `pipreqs`. First, install it:
+
+   ```
+   pip install pipreqs
+   ```
+
+   Then run:
+
+   ```
+   pipreqs /path/to/your/project
+   ```
+
+   This will generate a `requirements.txt` file with only the packages that are imported in your project.
+
+The first method (using `pip freeze`) will list all packages in your environment, which might include dependencies you're not directly using. The second method (using `pipreqs`) tries to be more selective, only including packages directly imported in your code.
