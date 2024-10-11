@@ -80,3 +80,6 @@ df = pd.read_csv("https://raw.githubusercontent.com/scikit-learn/scikit-learn/ma
 - 404 errors usually mean the URL is incorrect
 - Ensure you have permissions to access the repository
 - For private repositories, authentication is required
+
+Quick example
+curl https://www.w3.org/TR/PNG/iso_8859-1.txt -o "C:\Users\Cikal Merdeka\Desktop\random_file.txt"
