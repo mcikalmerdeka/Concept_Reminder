@@ -76,3 +76,6 @@ If you want to generate a `requirements.txt` file, you would typically run:
 ```bash
 pip freeze > requirements.txt
 ```
+
+Quick example
+pip freeze > "C:\Users\Cikal Merdeka\Desktop\requirements.txt"
