@@ -1,3 +1,5 @@
+Source: https://claude.ai/chat/54a3ea25-427f-4647-bd64-c5eee9c06cdb
+
 I'd be happy to explain the difference between star and snowflake schemas in databases, provide examples, and address your question about normalization forms. Let's break this down step by step:
 
 1. Star Schema vs. Snowflake Schema:
