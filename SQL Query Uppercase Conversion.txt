@@ -266,3 +266,33 @@ Additional information:
 
 - https://stackoverflow.com/questions/1009954/mysql-variable-vs-variable-whats-the-difference
 
+-------------------------------------------------------------
+Some improvement needed:
+- Aggregate function
+- Case when
+- Between
+- On in joining
+- When finish typing clauses they go with 1 spaces below
+- etc
+
+example where you can see the error
+SELECT format_sql_pretty(
+    'select c.customer_id, c.customer_name, sum(oi.quantity * p.price) as total_spent, 
+            count(distinct o.order_id) as total_orders, 
+            case 
+                when sum(oi.quantity * p.price) > 1000 then ''VIP''
+                when sum(oi.quantity * p.price) between 500 and 1000 then ''Loyal''
+                else ''Regular'' 
+            end as customer_category 
+     from customers c 
+     inner join orders o on c.customer_id = o.customer_id 
+     inner join order_items oi on o.order_id = oi.order_id 
+     inner join products p on oi.product_id = p.product_id 
+     where o.order_date between ''2023-01-01'' and ''2023-12-31'' 
+       and p.category = ''Electronics'' 
+       and o.status = ''completed'' 
+     group by c.customer_id, c.customer_name 
+     having count(distinct o.order_id) >= 5 
+     order by total_spent desc 
+     limit 10;'
+);
