@@ -28,6 +28,28 @@ You're correct that `pip install -r requirements.txt` is commonly used to instal
 
 The first method (using `pip freeze`) will list all packages in your environment, which might include dependencies you're not directly using. The second method (using `pipreqs`) tries to be more selective, only including packages directly imported in your code.
 
+-----------------------------------------------------------
+
+To generate a `requirements.txt` file based on just the imports in your `.ipynb` file, you can convert the notebook to a Python script and then run `pipreqs` on that script. Here's how:
+
+1. **Convert the `.ipynb` File to `.py`**:
+   - Open your Jupyter notebook in VSCode.
+   - Go to the **Command Palette** (`Ctrl+Shift+P`) and type `Export As Python Script`.
+   - Save the exported `.py` file in the same directory as your `.ipynb` file.
+
+2. **Run `pipreqs` on the Exported Python File**:
+   - In the terminal, navigate to the folder with the `.py` file.
+   - Run:
+     ```bash
+     pipreqs . --force
+     ```
+   - This will scan only the `.py` file in the current directory, ignoring the other folders.
+
+3. **Delete the Temporary `.py` File** (optional):
+   - After generating `requirements.txt`, you can delete the `.py` file if it’s not needed.
+
+This approach will limit `pipreqs` to only the dependencies used in that specific `.ipynb` file.
+
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------
 
