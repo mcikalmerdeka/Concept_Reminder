@@ -190,19 +190,28 @@ from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder
 degree_order = ['SMA', 'D3', 'S1', 'S2', 'S3']
 age_group_order = ['Young Adult', 'Middle Adult', 'Senior Adult']
 
+# Check if there are any unexpected categories in the data
+unique_degrees = df_preprocessed['Education'].unique()
+unique_age_groups = df_preprocessed['Age_Group'].unique()
+
+if not all(deg in degree_order for deg in unique_degrees):
+    print("Warning: Some education degrees in the data are not in the specified order list")
+if not all(age in age_group_order for age in unique_age_groups):
+    print("Warning: Some age groups in the data are not in the specified order list")
+
 # Create the column transformer for each pre-processing steps
 preprocessor = ColumnTransformer(
-    transformers=[
-        # For OrdinalEncoder, the categories parameter needs to be a list of lists or wrapped in double brackets to convert it to a 2D array, where each inner list contains the categories for each feature
-        ('education', OrdinalEncoder(categories=[degree_order]), ['Education']), 
-        ('age_group', OrdinalEncoder(categories=[age_group_order]), ['Age_Group']),
-
-        # drop='first': Drops the first column to avoid the dummy variable trap (optional, depending on whether you want all categories or not).
-        # sparse_output=False: This argument controls whether the encoder outputs a sparse matrix. Setting it to False returns a dense array instead of a sparse matrix.
-        ('marital_status', OneHotEncoder(drop='first', sparse_output=False), ['Marital_Status'])
-    ],
-    # remainder='passthrough' ensures that other columns that are not specified for transformation remain unchanged.
-    remainder='passthrough'
+   transformers=[
+       # For OrdinalEncoder, the categories parameter needs to be a list of lists or wrapped in double brackets to convert it to a 2D array, where each inner list contains the categories for each feature
+       ('education', OrdinalEncoder(categories=[degree_order]), ['Education']),
+       ('age_group', OrdinalEncoder(categories=[age_group_order]), ['Age_Group']),
+       
+       # drop='first': Drops the first column to avoid the dummy variable trap (optional, depending on whether you want all categories or not).
+       # sparse_output=False: This argument controls whether the encoder outputs a sparse matrix. Setting it to False returns a dense array instead of a sparse matrix.
+       ('marital_status', OneHotEncoder(drop='first', sparse_output=False), ['Marital_Status'])
+   ],
+   # remainder='passthrough' ensures that other columns that are not specified for transformation remain unchanged.
+   remainder='passthrough'
 )
 
 # Apply the transformer
@@ -211,21 +220,18 @@ df_encoded = preprocessor.fit_transform(df_preprocessed)
 # Get the non-transformed column names (all columns except the ones being transformed)
 passthrough_features = list(df_preprocessed.columns.drop(['Education', 'Age_Group', 'Marital_Status']))
 
-# Create the list of encoded column names
-encoded_features = (
-    ['Education', 'Age_Group'] +  # Ordinal encoded columns
-    [f'Marital_Status_{cat}' for cat in ['Bertunangan', 'Cerai', 'Duda', 'Janda', 'Menikah']]  # One-hot encoded columns
+# Create the list of column names
+transformed_features = (
+   ['Education', 'Age_Group'] +  # Ordinal encoded columns
+   [f'Marital_Status_{cat}' for cat in ['Bertunangan', 'Cerai', 'Duda', 'Janda', 'Menikah']] + # One-hot encoded columns (excluding first category 'Lajang')
+   passthrough_features  # Remaining columns
 )
 
-# Combine all column names with encoded features at the end
-all_features = passthrough_features + encoded_features
-
-# Convert the result back to a DataFrame and reorder columns
-df_encoded = pd.DataFrame(df_encoded, columns=all_features)
+# Convert the result back to a DataFrame
+df_encoded = pd.DataFrame(df_encoded, columns=transformed_features)
 
 # No need to drop and concatenate since we already have all columns in df_encoded, just re-assign the variable
 df_preprocessed = df_encoded
-
 -----------------------------------------------------------
 Additional Information on Machine learning pipelines
 
