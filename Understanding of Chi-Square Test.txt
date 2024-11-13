@@ -383,3 +383,152 @@ Each visualization type helps reveal different aspects of the data:
 4. **Mosaic plots** are particularly good for:
    - Showing deviations from expected frequencies
    - Visualizing the results of chi-square tests
+
+-------------------------------------------------------------
+what about if i want to test it relationship to a boolean column though? for example i want to do classification where the target values is whether the customer is default or not (1 or 0), can you use chi-square test to handle the categorical features to the target column?
+
+
+Yes, absolutely! This is a common use case of chi-square test for feature selection in classification problems. When you have categorical features and a binary target variable (like default/non-default), chi-square test can help determine which categorical features have a significant relationship with the target variable.
+
+Here's how it works with examples:
+
+1. **Simple Example with One Categorical Feature**
+```python
+# Example contingency table format for binary target
+#              | Default (1) | No Default (0) |
+# Rural        |     25     |      75        |
+# Urban        |     50     |      50        |
+
+# Using scipy
+from scipy.stats import chi2_contingency
+
+# Create contingency table
+contingency_table = pd.crosstab(df['residence'], df['is_default'])
+chi2, p_value, dof, expected = chi2_contingency(contingency_table)
+
+# Or using sklearn for feature selection
+from sklearn.feature_selection import chi2
+from sklearn.preprocessing import LabelEncoder
+
+# First encode categorical variable
+le = LabelEncoder()
+X = le.fit_transform(df['residence']).reshape(-1, 1)
+y = df['is_default']
+
+chi2_score, p_value = chi2(X, y)
+```
+
+2. **Multiple Categorical Features Example**
+```python
+def analyze_categorical_features(df, categorical_cols, target_col='is_default'):
+    results = []
+    
+    for col in categorical_cols:
+        # Create contingency table
+        cont_table = pd.crosstab(df[col], df[target_col])
+        
+        # Perform chi-square test
+        chi2, p_value, dof, expected = chi2_contingency(cont_table)
+        
+        # Store results
+        results.append({
+            'feature': col,
+            'chi2_score': chi2,
+            'p_value': p_value,
+            'degrees_of_freedom': dof
+        })
+    
+    return pd.DataFrame(results).sort_values('chi2_score', ascending=False)
+
+# Example usage
+categorical_features = ['residence', 'education', 'occupation', 'marital_status']
+results_df = analyze_categorical_features(df, categorical_features)
+```
+
+3. **Visualization of Results**
+
+```tsx
+import React from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+
+const ChiSquareVisualization = () => {
+  // Example data
+  const data = [
+    { feature: 'Education', chi2_score: 145.2, p_value: 0.001 },
+    { feature: 'Occupation', chi2_score: 98.6, p_value: 0.002 },
+    { feature: 'Residence', chi2_score: 67.3, p_value: 0.003 },
+    { feature: 'MaritalStatus', chi2_score: 45.1, p_value: 0.008 }
+  ];
+
+  return (
+    <div className="space-y-8 p-4">
+      <div className="space-y-4">
+        <h2 className="text-xl font-bold">Chi-Square Feature Selection Results</h2>
+        
+        {/* Chi-Square Scores */}
+        <div className="space-y-2">
+          <h3 className="text-lg font-semibold">Chi-Square Scores by Feature</h3>
+          <div className="h-64">
+            <BarChart width={600} height={250} data={data}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="feature" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="chi2_score" fill="#8884d8" />
+            </BarChart>
+          </div>
+        </div>
+
+        {/* P-Values */}
+        <div className="space-y-2">
+          <h3 className="text-lg font-semibold">P-Values by Feature</h3>
+          <div className="h-64">
+            <BarChart width={600} height={250} data={data}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="feature" />
+              <YAxis />
+              <Tooltip />
+              <Legend />
+              <Bar dataKey="p_value" fill="#82ca9d" />
+            </BarChart>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default ChiSquareVisualization;
+
+```
+
+4. **Interpretation:**
+- **Chi-square score**: Higher values indicate stronger relationship with the target
+- **P-value**: Lower values indicate more statistical significance
+   - Typically use p < 0.05 as cutoff for significance
+   - Features with p > 0.05 might be candidates for removal
+
+5. **Using Results for Feature Selection:**
+```python
+# Using sklearn's SelectKBest with chi-square
+from sklearn.feature_selection import SelectKBest, chi2
+from sklearn.preprocessing import LabelEncoder
+
+# First encode all categorical variables
+X_encoded = df[categorical_features].apply(LabelEncoder().fit_transform)
+y = df['is_default']
+
+# Select top k features
+selector = SelectKBest(chi2, k=3)  # select top 3 features
+X_selected = selector.fit_transform(X_encoded, y)
+
+# Get selected feature names
+selected_features = [categorical_features[i] for i in selector.get_support(indices=True)]
+```
+
+Key Benefits of this approach:
+1. Helps identify which categorical features are most relevant to default prediction
+2. Can reduce model complexity by removing irrelevant features
+3. Provides statistical backing for feature selection decisions
+4. Works well with categorical features and binary targets
