@@ -1,0 +1,127 @@
+Source : https://claude.ai/chat/a0c6e8c0-0a78-4772-9cc6-a8bf42cae1a8
+
+----------------------------------------------------------------
+Yes, Metabase has a free open source version that you can use for personal projects. Here's what you need to know:
+
+The free self-hosted version (Metabase Open Source Edition) includes:
+- Full core analytics and visualization features
+- Ability to connect to most common databases
+- Interactive dashboards and sharing capabilities
+- SQL editor and visual query builder
+- Unlimited users
+- No time limitations
+
+To use Metabase for free:
+1. Download the open source version from the Metabase website or GitHub
+2. Host it yourself on your own server or computer
+3. Connect it to your database(s)
+
+Popular hosting options for personal projects include:
+- Running it on your local machine
+- Using a small VPS like DigitalOcean, Linode, or AWS EC2
+- Deploying to Heroku (though this is no longer free)
+
+Keep in mind that while the software is free, you'll need to cover any hosting costs if you deploy it to a cloud provider. For personal projects, running it locally on your machine is often the simplest free option.
+
+----------------------------------------------------------
+i see that for free version to run locally you have this option of utilizing docker? can you explain how that works?
+
+
+Yes, using Docker is one of the easiest ways to run Metabase locally. Docker creates a containerized environment that includes everything Metabase needs to run, making setup much simpler. Here's how it works:
+
+1. First, you'll need to have Docker installed on your computer. You can download Docker Desktop for Windows/Mac from Docker's website.
+
+2. Once Docker is installed, you can run Metabase with a single command:
+```bash
+docker run -d -p 3000:3000 --name metabase metabase/metabase
+```
+
+This command:
+- `-d` runs the container in detached mode (in the background)
+- `-p 3000:3000` maps port 3000 on your computer to port 3000 in the container
+- `--name metabase` gives your container a name
+- `metabase/metabase` is the official Metabase Docker image
+
+3. After running this command, Metabase will be available at `http://localhost:3000` in your web browser
+
+To persist your Metabase data between container restarts, you can use a volume:
+```bash
+docker run -d -p 3000:3000 \
+  -v ~/metabase-data:/metabase-data \
+  -e "MB_DB_FILE=/metabase-data/metabase.db" \
+  --name metabase metabase/metabase
+```
+
+Some useful Docker commands for managing Metabase:
+- Stop Metabase: `docker stop metabase`
+- Start it again: `docker start metabase`
+- View logs: `docker logs metabase`
+- Remove container: `docker rm metabase`
+
+------------------------------------------------------------
+
+does my data like my visualizations, models, etc is saved everytime i start and stop my docker container? for example i make a visualization today and then tomorrow when i open it again with docker start metabase i will see my yesterday visualization?
+
+
+It depends on how you set up your Docker container. By default, if you just use the basic command (`docker run -d -p 3000:3000 --name metabase metabase/metabase`), your data will NOT persist between container restarts. This is because Docker containers are stateless by default.
+
+To persist your data (visualizations, models, settings, etc.), you need to use Docker volumes. Here's the proper way to set it up with data persistence:
+
+```bash
+docker run -d -p 3000:3000 \
+  -v ~/metabase-data:/metabase-data \
+  -e "MB_DB_FILE=/metabase-data/metabase.db" \
+  --name metabase metabase/metabase
+```
+
+This setup:
+1. Creates a volume (`-v ~/metabase-data:/metabase-data`) that maps a folder on your computer to store Metabase's data
+2. Tells Metabase where to store its database (`MB_DB_FILE=/metabase-data/metabase.db`)
+
+With this configuration:
+- All your visualizations will be saved
+- Your database connections will persist
+- Your user settings will be maintained
+- Your dashboards and collections will be preserved
+- When you stop and start the container, everything will be exactly as you left it
+
+If you're already running Metabase without volumes, you'll need to:
+1. Stop the current container: `docker stop metabase`
+2. Remove it: `docker rm metabase`
+3. Run the new command with the volume configuration above
+
+------------------------------------------------------------
+so everytime i start docker i need to use that command?
+
+
+No, you only need to use the full `docker run` command ONCE - the very first time you set up Metabase. After that, you can simply use:
+
+```bash
+docker start metabase
+```
+
+to start it, and:
+```bash
+docker stop metabase
+```
+
+to stop it.
+
+This is because the `docker run` command creates the container with all its configurations (including the volume settings for data persistence). Once created, these settings are saved and will be used every time you start the container.
+
+So your workflow would be:
+
+1. First time setup (run once only):
+```bash
+docker run -d -p 3000:3000 \
+  -v ~/metabase-data:/metabase-data \
+  -e "MB_DB_FILE=/metabase-data/metabase.db" \
+  --name metabase metabase/metabase
+```
+
+2. For all future uses:
+- To start: `docker start metabase`
+- To stop: `docker stop metabase`
+- To check if it's running: `docker ps`
+
+The only time you'd need to run the full command again is if you delete the container (`docker rm metabase`) or want to create a new container with different settings.
