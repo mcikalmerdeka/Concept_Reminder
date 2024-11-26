@@ -125,3 +125,89 @@ docker run -d -p 3000:3000 \
 - To check if it's running: `docker ps`
 
 The only time you'd need to run the full command again is if you delete the container (`docker rm metabase`) or want to create a new container with different settings.
+
+------------------------------------------------------------------------------------------
+
+i ran into a new problem that is whenever i shutdown my pc, and then i run docker start again, it actually start from the beginning again like setup and so-on and the data actually not saved? how can i fix this, i already use
+
+docker run -d -p 3000:3000 \
+  -v ~/metabase-data:/metabase-data \
+  -e "MB_DB_FILE=/metabase-data/metabase.db" \
+  --name metabase metabase/metabase
+
+as the start in making the container
+
+This sounds like Docker might not be preserving your container's state between system reboots. Here are a few troubleshooting steps:
+
+1. First, check if your container exists:
+```bash
+docker ps -a
+```
+If it's not showing up, the container might have been removed during shutdown.
+
+2. If the container is gone, modify your run command to add the `--restart` flag:
+```bash
+docker run -d -p 3000:3000 \
+  -v ~/metabase-data:/metabase-data \
+  -e "MB_DB_FILE=/metabase-data/metabase.db" \
+  --restart unless-stopped \
+  --name metabase metabase/metabase
+```
+The `--restart unless-stopped` ensures the container restarts automatically after system reboot.
+
+3. Verify your volume is correctly mounted:
+```bash
+docker volume ls
+```
+Look for a volume related to your Metabase data.
+
+4. If you're still having issues, try:
+```bash
+# Remove existing container
+docker stop metabase
+docker rm metabase
+
+# Recreate with full persistent configuration
+docker run -d -p 3000:3000 \
+  -v metabase-data:/metabase-data \
+  -e "MB_DB_FILE=/metabase-data/metabase.db" \
+  --restart unless-stopped \
+  --name metabase metabase/metabase
+```
+
+Note the slight change to the volume mount (using a named volume instead of a path).
+
+-----------------------------------------------------------------------------------------
+
+this is the output of docker volume ls, i didn't see the volume of metabase, why is that?
+
+I see, the output of `docker volume ls` does not show a volume named specifically for Metabase. This could be the reason why your data is not persisting between reboots.
+
+There are a couple of things to check:
+
+1. **Verify the volume mount**: In your original `docker run` command, you used a host path (`~/metabase-data`) to mount the volume. This means the volume is tied to that specific path on your local machine. If that path doesn't exist or is not accessible, Docker will not be able to mount the volume correctly.
+
+2. **Try using a named volume**: Instead of using a host path, you can create a named Docker volume and use that. This makes the volume more portable and less dependent on the specific file system path. Try modifying your command:
+
+```
+docker run -d -p 3000:3000 \
+  -v metabase-data:/metabase-data \
+  -e "MB_DB_FILE=/metabase-data/metabase.db" \
+  --restart unless-stopped \
+  --name metabase metabase/metabase
+```
+
+The key difference is using `metabase-data:/metabase-data` instead of the host path. This will create a named volume called `metabase-data` and mount it to the container.
+
+3. **Check the volume status**: After running the modified command, try running `docker volume ls` again. You should see the `metabase-data` volume listed.
+
+4. **Verify data persistence**: Stop and start the Metabase container again, and check if your data (visualizations, models, etc.) are still there.
+
+Let me know if you have any other questions! Troubleshooting volume mounts can sometimes be tricky, but using named volumes is generally the more reliable approach.
+
+------------------------------------------------------------------------------------------
+Important : comparison on the volume 
+
+docker run -d -p 3000:3000 -v ~/metabase-data:/metabase-data -e "MB_DB_FILE=/metabase-data/metabase.db" --restart unless-stopped --name metabase metabase/metabase
+
+docker run -d -p 3000:3000 -v metabase-data:/metabase-data -e "MB_DB_FILE=/metabase-data/metabase.db" --restart unless-stopped --name metabase metabase/metabase
