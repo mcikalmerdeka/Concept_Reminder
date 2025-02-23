@@ -225,6 +225,39 @@ In summary, adding 3.11.6 to the PATH will prioritize it when you type `python`,
 
 ---------------------------------------------------------------------------------------------
 
+update (23/02/2025): Check and modify your Python PATH settings in Windows
+https://claude.ai/chat/49a0d986-8f5f-44cc-8c68-17920637928f
+
+I'll help you check and modify your Python PATH settings in Windows:
+
+1. Open Windows Settings:
+   - Press Windows + I
+   - Or search for "Settings" in the Start menu
+
+2. In Settings:
+   - Search for "Environment Variables" in the search bar
+   - Click on "Edit the system environment variables"
+
+3. In the System Properties window:
+   - Click the "Environment Variables" button at the bottom
+
+4. Under "System variables", find and select "Path":
+   - Click "Edit"
+   - You should see entries for both Python versions
+   - They usually look something like:
+     ```
+     C:\Users\YourUsername\AppData\Local\Programs\Python\Python311\
+     C:\Users\YourUsername\AppData\Local\Programs\Python\Python311\Scripts\
+     C:\Users\YourUsername\AppData\Local\Programs\Python\Python312\
+     C:\Users\YourUsername\AppData\Local\Programs\Python\Python312\Scripts\
+     ```
+
+5. To change which Python version is used first:
+   - Select the Python version you want to use
+   - Use the "Move Up" button to move it to the top of the list
+
+---------------------------------------------------------------------------------------------
+
 i want to create a new virtual environment and install the packages used that is stored in a requirements.txt file, how can i do that?
 
 
