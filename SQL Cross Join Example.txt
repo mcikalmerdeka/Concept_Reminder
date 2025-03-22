@@ -260,3 +260,70 @@ Important notes:
    ```
 
 So while CROSS JOIN can be used with tables that have common columns, its main purpose is to generate all possible combinations, which is particularly useful when you need to create a complete set of possibilities, like in our student-subjects example where we needed to show every student-subject combination, even if no exam was taken.
+
+---------------------------------------------------------------------------------------------------
+
+Source: https://chat.deepseek.com/a/chat/s/06c89a4e-1225-40b4-a723-ad29e89b38b3
+
+Comparison with full outer join
+
+No, a **CROSS JOIN** and a **FULL OUTER JOIN** are **not the same** in SQL. They serve fundamentally different purposes:
+
+### 1. **CROSS JOIN**
+- **Purpose**: Produces a **Cartesian product** of two tables (all possible combinations of rows).
+- **No Condition**: It does **not** use an `ON` or `WHERE` clause to match rows.
+- **Result**: Every row from Table A is paired with every row from Table B.
+  - If Table A has **M** rows and Table B has **N** rows, the result has **M × N** rows.
+- **Syntax**:
+  ```sql
+  SELECT * FROM TableA CROSS JOIN TableB;
+  ```
+
+### 2. **FULL OUTER JOIN**
+- **Purpose**: Returns **all rows** from both tables, matching rows where possible and filling in `NULL` for non-matching columns.
+- **Condition-Based**: Requires an `ON` clause to specify how tables relate.
+- **Result**:
+  - All matched rows (where the `ON` condition is true).
+  - Unmatched rows from **both** tables, with `NULL` for columns from the other table.
+- **Syntax**:
+  ```sql
+  SELECT * FROM TableA FULL OUTER JOIN TableB ON TableA.id = TableB.id;
+  ```
+
+---
+
+### Key Differences
+| Feature               | CROSS JOIN                          | FULL OUTER JOIN                     |
+|-----------------------|-------------------------------------|-------------------------------------|
+| **Combination Logic** | All possible row pairs (Cartesian). | Matches rows + unmatched rows.      |
+| **Join Condition**    | None.                               | Requires `ON` clause.               |
+| **Result Size**       | `M × N` rows.                       | At least `max(M, N)` rows.          |
+| **Use Case**          | Generate exhaustive combinations.  | Retain all data, even unmatched rows. |
+
+---
+
+### Example
+- **CROSS JOIN** (3 rows in A × 2 rows in B → **6 rows**):
+  ```
+  A1, B1
+  A1, B2
+  A2, B1
+  A2, B2
+  A3, B1
+  A3, B2
+  ```
+
+- **FULL OUTER JOIN** (e.g., 3 rows in A, 2 rows in B, 1 match → **4 rows**):
+  ```
+  A1, B1   (matched)
+  A2, NULL (unmatched in A)
+  A3, NULL (unmatched in A)
+  NULL, B2 (unmatched in B)
+  ```
+
+---
+
+### Summary
+- Use **CROSS JOIN** for combinatorial pairings (e.g., generating all possible combinations).
+- Use **FULL OUTER JOIN** to include **all rows** from both tables, even if they don’t match.  
+They are **not interchangeable**!
