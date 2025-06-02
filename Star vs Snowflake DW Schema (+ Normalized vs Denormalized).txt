@@ -1,5 +1,7 @@
 Source: https://claude.ai/chat/54a3ea25-427f-4647-bd64-c5eee9c06cdb
 
+---------------------------------------------------------------------------------------------------
+
 I'd be happy to explain the difference between star and snowflake schemas in databases, provide examples, and address your question about normalization forms. Let's break this down step by step:
 
 1. Star Schema vs. Snowflake Schema:
@@ -304,3 +306,78 @@ Data redundancy is important for several reasons:
 It's worth noting that while reducing data redundancy is generally a goal in database design (achieved through normalization), there are cases where controlled redundancy is introduced intentionally (denormalization) to optimize for specific performance requirements, especially in data warehouse designs.
 
 The key is to find the right balance based on your specific needs, considering factors like data integrity, performance requirements, and the nature of your data and its usage patterns.
+
+---------------------------------------------------------------------------------------------------
+
+Source 2: https://chatgpt.com/c/683da4b1-b1fc-800a-9bff-e0d63e17deac
+
+The concepts of **normalized** and **denormalized schemas** are foundational in understanding the **star** and **snowflake** database schema designs used in data warehousing and business intelligence.
+
+---
+
+### 🔹 Normalized vs Denormalized Schema
+
+| Aspect     | Normalized Schema                                           | Denormalized Schema                                                    |
+| ---------- | ----------------------------------------------------------- | ---------------------------------------------------------------------- |
+| Structure  | Data is split into many related tables to reduce redundancy | Data is combined into fewer, larger tables to improve read performance |
+| Purpose    | Optimized for **OLTP (Online Transaction Processing)**      | Optimized for **OLAP (Online Analytical Processing)**                  |
+| Advantages | Avoids redundancy, maintains data integrity                 | Improves query speed and simplifies analysis                           |
+| Drawbacks  | Slower for analytical queries due to complex joins          | May introduce redundancy and risk of inconsistency                     |
+
+---
+
+### 🔹 Star Schema (Denormalized)
+
+* A **denormalized** schema.
+* Central **fact table** (e.g., sales) surrounded by multiple **dimension tables** (e.g., product, customer, time).
+* Each dimension table is **flattened** (not normalized), meaning all relevant info is stored in one table.
+
+#### Example:
+
+```
+      Product   Customer   Time
+          \       |       /
+           \      |      /
+            \     |     /
+              Fact Table
+```
+
+* ✅ Faster queries for reporting
+* ✅ Simpler design for analysts
+* ❌ More storage used due to redundancy
+
+---
+
+### 🔹 Snowflake Schema (Normalized)
+
+* A **normalized** schema.
+* Similar to star schema but dimension tables are **broken down** into sub-tables.
+* Reduces data redundancy but requires more complex joins.
+
+#### Example:
+
+```
+      Product --> Product_Category
+      Customer --> Region
+      Time
+           \      |     /
+            \     |    /
+             \    |   /
+              Fact Table
+```
+
+* ✅ Reduces redundancy
+* ✅ More storage-efficient
+* ❌ Slower query performance due to joins
+* ❌ More complex structure for end-users
+
+---
+
+### 🔄 Summary of Connection
+
+| Schema Type          | Normalization Level | Use Case                           |
+| -------------------- | ------------------- | ---------------------------------- |
+| **Star Schema**      | **Denormalized**    | Fast querying, simple reporting    |
+| **Snowflake Schema** | **Normalized**      | Storage efficiency, data integrity |
+
+---
