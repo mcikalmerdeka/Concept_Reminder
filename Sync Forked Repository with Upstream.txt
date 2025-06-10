@@ -199,3 +199,92 @@ The `git fetch` command is used to **retrieve updates from a remote repository**
 - **`git fetch`:** Only retrieves updates, giving you control over when and how to integrate them into your branch.
 
 By separating fetching and merging, you avoid unintended changes to your branch and gain flexibility in managing updates.
+
+---------------------------------------------------------------------------------------------------
+
+**Update: Forked repo commit workflow**
+https://claude.ai/chat/b2ca4ab3-ec5b-41a2-b3e8-5679dd5964b4
+
+when i make changes in a forked repo and i want to commit that, will the changes go to the original author repo or my own forked repo because i dont want to  make changes to the original author repo here
+
+When you commit changes in your forked repository, those changes will **only go to your own forked repo**, not to the original author's repository. This is exactly how forks are designed to work - they give you your own independent copy where you can make changes safely.
+
+Here's what happens:
+
+1. **Your commits stay in your fork** - Any changes you commit and push will only affect your forked repository
+2. **Original repo remains untouched** - The original author's repository won't see any of your changes unless you specifically send them a pull request
+3. **You have full control** - You can experiment, break things, and make any changes you want in your fork without affecting anyone else
+
+If you ever DO want to contribute your changes back to the original repository, you would need to:
+- Create a pull request from your fork to the original repo
+- The original author would then review and decide whether to accept your changes
+
+So you're completely safe to commit and push changes to your fork - it won't affect the original repository at all.
+
+---------------------------------------------------------------------------------------------------
+
+but when i checked the git history, i saw the changes history from the original author, is that normal?
+
+Yes, that's completely normal! When you fork a repository, you get the **entire history** of the original repository, including all the original author's commits. This is how Git works - you're getting a complete copy of the project's history.
+
+Here's what you're seeing:
+
+**In your fork's git history:**
+- All the original author's commits (from before you forked)
+- All your new commits (that you've made since forking)
+
+**What this means:**
+- The original author's commit history is part of your fork - this is expected
+- Your new commits are only in your fork
+- The original repository doesn't have your new commits
+
+Think of it like this: when you fork, you're saying "give me a copy of this entire project, including its history, so I can build on top of it." You're not starting from scratch - you're continuing from where the original project left off.
+
+**To verify your changes are only in your fork:**
+- Check the commit author names - yours should show your name/email
+- Look at recent commits - your commits should be at the top
+- The original author won't see your commits unless you send a pull request
+
+This shared history is actually useful because it allows you to:
+- Track changes between your fork and the original
+- Create meaningful pull requests
+- Keep your fork updated with the original repository if needed
+
+-------------------------------------------------------------------------------------------
+
+even though i used this command, the changes that i made will only reflect on my own forked repo right
+
+git remote add upstream https://github.com/manuelgilm/mlflow_for_ml_dev.git
+
+Yes, absolutely correct! Even after adding that upstream remote, **your commits will still only go to your own forked repo**.
+
+That `git remote add upstream` command doesn't change where your commits go - it just adds a reference to the original repository. Here's what it does:
+
+**What that command adds:**
+- A way to reference the original repo (called "upstream")
+- Ability to fetch updates from the original repo
+- Ability to compare your fork with the original
+
+**What it doesn't change:**
+- Your commits still go to your fork (origin) by default
+- `git push` still pushes to your forked repo
+- The original author still can't see your changes
+
+**Common workflow with upstream:**
+```bash
+# Your commits still go to your fork
+git add .
+git commit -m "my changes"
+git push origin main  # Goes to YOUR fork
+
+# But now you can also fetch updates from original
+git fetch upstream
+git merge upstream/main  # Brings original author's new changes into your fork
+```
+
+The upstream remote is typically used to:
+- Keep your fork updated with the original repository
+- Compare differences between your fork and the original
+- Create pull requests more easily
+
+So you're completely safe - your changes will only affect your forked repository, not the original author's repo.
