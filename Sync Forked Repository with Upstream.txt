@@ -288,3 +288,116 @@ The upstream remote is typically used to:
 - Create pull requests more easily
 
 So you're completely safe - your changes will only affect your forked repository, not the original author's repo.
+
+---------------------------------------------------------------------------------------------------
+
+Update: Fork vs Clone Behaviour
+https://chatgpt.com/c/687ea2f7-c4ac-800a-99b2-9c7f4529d934
+
+is it better to fork or clone a repo if i want to learn a repository from a course
+
+
+Great question! The choice between **forking** and **cloning** depends on what you want to do with the repository:
+
+---
+
+### ✅ **Use `clone` if**:
+
+* You just want to **download the code and explore it locally**.
+* You don’t plan to contribute back or modify the repo in a way that needs to be shared.
+* You're **following along with a course**, and only need the repo for personal learning or experimentation.
+
+```bash
+git clone https://github.com/someone/course-repo.git
+```
+
+> 🧠 *Cloning* makes a local copy without linking it to your own GitHub account.
+
+---
+
+### ✅ **Use `fork` if**:
+
+* You want your **own copy of the repo on GitHub** (e.g., to save changes, experiment, or build on top of it).
+* You want to **make pull requests** to the original repo.
+* You plan to **share your changes**, submit assignments, or show progress.
+
+Steps:
+
+1. Click **Fork** on GitHub.
+2. Then clone **your fork**:
+
+   ```bash
+   git clone https://github.com/your-username/course-repo.git
+   ```
+
+---
+
+### 🧑‍🏫 For most **course learning scenarios**, the best practice is:
+
+* **Clone** if you're just following along.
+* **Fork and clone your fork** if you're expected to:
+
+  * Submit code,
+  * Customize the repo,
+  * Share your work.
+
+Let me know if you want help with the commands or GitHub workflow!
+
+---------------------------------------------------------------------------------------------------
+
+if i do clone, and the original course repo is updated, how can i also have that update? i believe in fork i can set the upstream right? but what about clone?
+
+
+Great follow-up! You're absolutely right — **when you fork a repo**, you typically set the **upstream** to keep track of updates from the original repo.
+But the good news is: **you can also set an upstream when you clone directly from the original repo.**
+
+---
+
+### ✅ If you **cloned the original repo**:
+
+You already have the original repo as your **`origin`** remote.
+
+To get updates:
+
+```bash
+git pull origin main
+```
+
+(Replace `main` with `master` or the correct branch name if needed.)
+
+---
+
+### ✅ If you **cloned a forked repo** (your own copy), and want to update it with changes from the original:
+
+1. Set the original repo as the **upstream** remote:
+
+   ```bash
+   git remote add upstream https://github.com/original-author/course-repo.git
+   ```
+
+2. Fetch updates from upstream:
+
+   ```bash
+   git fetch upstream
+   ```
+
+3. Merge them into your current branch:
+
+   ```bash
+   git merge upstream/main
+   ```
+
+   (Or use `rebase` if you're comfortable.)
+
+---
+
+### 🔄 Summary Table
+
+| Setup                  | Remote Name           | Purpose                                          |
+| ---------------------- | --------------------- | ------------------------------------------------ |
+| Cloned original repo   | `origin`              | Direct source; can pull directly                 |
+| Forked repo + upstream | `origin` + `upstream` | `origin` = your fork, `upstream` = original repo |
+
+---
+
+Let me know if you want a real example using a public repo, or want to automate syncing!
